@@ -1,4 +1,56 @@
 import tkinter as tk
+from tkinter import font
+
+
+class CalculatorUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Calculator")
+        self.text = tk.StringVar()
+        self.init_components()
+        self.default_font = font.nametofont("TkDefaultFont")
+        self.default_font.configure(family="Times", size=12)
+
+    def display_handler(self, event):
+        pressed_button = event.widget["text"]
+        self.text.set(self.text.get() + str(pressed_button))
+
+    def init_components(self):
+        buttons = self.init_buttons()
+        operators = self.init_operators()
+        display = self.init_display()
+        settings = {"padx": 5, "pady": 2, "expand": True, "fill": "both"}
+        display.pack(anchor=tk.N, **settings)
+        buttons.pack(side=tk.LEFT, **settings)
+        operators.pack(side=tk.RIGHT, **settings)
+
+    def init_buttons(self):
+        """Initializes the num-pad"""
+        keys = [7, 8, 9, 4, 5, 6, 1, 2, 3, "del", 0, "."]
+        buttons = Keypad(self, keys, 3)
+        buttons.bind('<Button>', self.display_handler)
+        return buttons
+
+    def init_operators(self):
+        """Initialize the operator keypad"""
+        keys = list("*/+-^=")
+        operators = Keypad(self, keys, 1)
+        operators.bind('<Button>', self.display_handler)
+        return operators
+
+    def init_display(self):
+        """Initializes the display for the calculator"""
+        frame = tk.Frame(self)
+        display = tk.Label(frame, width=10, anchor=tk.E, textvariable=self.text
+                           , background="#000000", foreground="#FDDA0D")
+        display["font"] = ("Times", 30)
+        settings = {"expand": True, "fill": "both"}
+        display.pack(**settings)
+        return frame
+
+    def run(self):
+        """Runs the UI"""
+        self.mainloop()
 
 
 class Keypad(tk.Frame):
@@ -26,7 +78,8 @@ class Keypad(tk.Frame):
         row = 0
         for key in self.keynames:
             button = tk.Button(self, text=key)
-            button.grid(column=column % columns, row=row // columns, **settings)
+            button.grid(column=column % columns, row=row // columns,
+                        **settings)
             self.rowconfigure(row // columns, weight=1)
             self.columnconfigure(column % columns, weight=1)
             column += 1
@@ -94,3 +147,5 @@ if __name__ == "__main__":
     keypad.bind_button('<Button>', hahahhaha, 1)
     keypad.pack()
     root.mainloop()
+    UI = CalculatorUI()
+    UI.run()
