@@ -3,6 +3,7 @@ from tkinter import font
 
 
 class CalculatorUI(tk.Tk):
+    """UI for the calculator"""
     def __init__(self):
         super().__init__()
         self.title("Calculator")
@@ -11,9 +12,6 @@ class CalculatorUI(tk.Tk):
         self.default_font = font.nametofont("TkDefaultFont")
         self.default_font.configure(family="Times", size=12)
 
-    def display_handler(self, event):
-        pressed_button = event.widget["text"]
-        self.text.set(self.text.get() + str(pressed_button))
 
     def init_components(self):
         buttons = self.init_buttons()
@@ -28,14 +26,12 @@ class CalculatorUI(tk.Tk):
         """Initializes the num-pad"""
         keys = [7, 8, 9, 4, 5, 6, 1, 2, 3, "del", 0, "."]
         buttons = Keypad(self, keys, 3)
-        buttons.bind('<Button>', self.display_handler)
         return buttons
 
     def init_operators(self):
         """Initialize the operator keypad"""
         keys = list("*/+-^=")
         operators = Keypad(self, keys, 1)
-        operators.bind('<Button>', self.display_handler)
         return operators
 
     def init_display(self):
