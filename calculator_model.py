@@ -3,6 +3,7 @@ import enum
 
 
 class CalculatorLogic:
+    """Computation logic for the calculator"""
     def calculate(self, expression):
         expression = self.format_input(expression)
         try:
@@ -21,18 +22,20 @@ class CalculatorLogic:
         return "".join(expression)
 
 
-
 class MathOperators(enum.Enum):
+    """Class to represent math operators"""
     S = "sqrt("
     L = "log"
     E = "exp("
 
     @classmethod
     def return_operands(cls):
+        """Returns a list of all abbreviated math operators"""
         return [x.name for x in list(MathOperators)]
 
 
 class DisplayLogic:
+    """A class to handle the display"""
     pass
 
 
@@ -40,4 +43,4 @@ if __name__ == "__main__":
     cal = CalculatorLogic()
     print(cal.calculate("S4)"))
     print(cal.calculate("L2(2)"))
-    print(cal.calculate(""))
+    print(cal.calculate("E()"))
