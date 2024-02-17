@@ -1,5 +1,6 @@
 """Controller for the calculator"""
 from calculator_ui import CalculatorUI
+from calculator_model import CalculatorLogic
 import abc
 
 
@@ -9,38 +10,41 @@ class Controller:
         self.state = None
         mainframe = CalculatorUI()
         self.main = mainframe
+        self.logic = CalculatorLogic()
         self.display_text = mainframe.text
-        mainframe.bind('<Button>', self.add_to_display)
-
+        mainframe.children["!keypad"].bind('<Button>', self.add_to_display)
+        mainframe.children["!keypad2"].bind('<Button>', self.add_to_display)
+        mainframe.children["!keypad"].bind_button('<Button>', self.delete_input, 10)
+        mainframe.children["!keypad2"].bind_button('<Button>',self.calculate, 6)
     def add_to_display(self, event):
         """
         Adds the input to the calculators display.
         """
         pressed_button = event.widget["text"]
-        self.display_text.set(self.display_text.get() + str(pressed_button))
+        self.main.text.set(self.logic.add_to_display(pressed_button))
 
-    def calculate(self):
+    def calculate(self, event):
         """
         Calculate the given characters on display using the model.
         """
-        pass
+        self.main.text.set(self.logic.calculate())
 
     def get_history(self):
         """Gets the history from the model and add it to the display"""
         pass
 
-    def delete_input(self):
+    def delete_input(self, event):
         """
         While the controller is in the active state delete the last,
         character in the display.
         While the controller is in the inactive state delete the entire,
         expression on display.
         """
-        pass
+        self.main.text.set(self.logic.delete_display())
 
     def clear_input(self):
         """Clear the user input in the display"""
-        pass
+        self.main.text.set(self.logic.clear_display())
 
 
 class CalculatorState(abc.ABC):
@@ -62,3 +66,4 @@ class InactiveCalculator(CalculatorState):
 
 if __name__ == "__main__":
     remote = Controller()
+    remote.main.run()

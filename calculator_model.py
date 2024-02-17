@@ -3,23 +3,44 @@ import enum
 
 
 class CalculatorLogic:
-    """Computation logic for the calculator"""
-    def calculate(self, expression):
-        expression = self.format_input(expression)
+    """logic for the calculator"""
+    expression = ""
+
+    def calculate(self):
+        expression = self.format_input()
+        expression = expression.replace("^", "**")
         try:
             total = eval(expression)
         except:
             return None
+        self.expression = str(total)
         return total
 
-    def format_input(self, expression):
+    def add_to_display(self, item):
+        try:
+            item = MathOperators(item).name
+        except ValueError:
+            pass
+        self.expression += str(item)
+        return self.format_input()
+
+    def delete_display(self):
+        self.expression = self.expression[:-1]
+        return self.format_input()
+
+    def clear_display(self):
+        self.expression = ""
+        return self.format_input()
+
+    def format_input(self):
         index = 0
-        expression = list(expression)
+        expression = list(self.expression)
         for items in expression:
             if items in MathOperators.return_operands():
                 expression[index] = MathOperators[items].value
             index += 1
-        return "".join(expression)
+        return ''.join(expression)
+
 
 
 class MathOperators(enum.Enum):
@@ -34,13 +55,8 @@ class MathOperators(enum.Enum):
         return [x.name for x in list(MathOperators)]
 
 
-class DisplayLogic:
-    """A class to handle the display"""
-    pass
-
-
 if __name__ == "__main__":
     cal = CalculatorLogic()
-    print(cal.calculate("S4)"))
-    print(cal.calculate("L2(2)"))
-    print(cal.calculate("E()"))
+    cal.add_to_display("4")
+    cal.add_to_display("^4")
+    print(cal.calculate())
