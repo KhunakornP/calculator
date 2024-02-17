@@ -3,7 +3,6 @@
 
 from calculator_ui import CalculatorUI
 from calculator_model import CalculatorLogic
-import abc
 
 
 class Controller:
@@ -24,18 +23,18 @@ class Controller:
         self.main.children["!frame2"].children["!keypad"].bind('<Button>',self.add_to_display)
         self.main.children["!frame3"].children["!listbox"].bind('<<ListboxSelect>>',lambda event: self.add_to_display(event,2))
 
-    def add_to_display(self, event, type=3):
+    def add_to_display(self, event, event_type=3):
         """
         Adds the input to the calculators display.
         """
-        if type == 1:
+        if event_type == 1:
             self.main.text.set(self.logic.add_to_display(
                                 self.main.special.get()))
-        elif type == 2:
+        elif event_type == 2:
             if event.widget.curselection() != ():
                 selection = event.widget.curselection()
                 self.main.text.set(self.logic.get_history(event.widget.get(selection)))
-        elif type == 3:
+        elif event_type == 3:
             pressed_button = event.widget["text"]
             self.main.text.set(self.logic.add_to_display(pressed_button))
 

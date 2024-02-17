@@ -9,6 +9,7 @@ class CalculatorLogic:
     history = []
 
     def calculate(self):
+        """Calculates the expression"""
         expression = self.format_input()
         expression = expression.replace("^", "**")
         expression = expression.replace("mod", "%")
@@ -26,13 +27,14 @@ class CalculatorLogic:
         return self.format_output(total)
 
     def add_to_display(self, item):
+        """Adds the item to the display"""
         operators = MathOperators.return_operands()
         try:
             item = MathOperators(item).name
         except ValueError:
             pass
         if len(self.expression) <= 0:
-            self.expression += item
+            self.expression += str(item)
             return self.format_input()
         operands = ["+", "-", "/", "^", "*"]
         if len(self.expression) > 0 and self.expression[-1] in operands:
@@ -53,14 +55,17 @@ class CalculatorLogic:
         return self.format_input()
 
     def delete_display(self):
+        """Deletes the last item on display"""
         self.expression = self.expression[:-1]
         return self.format_input()
 
     def clear_display(self):
+        """Clears the display"""
         self.expression = ""
         return self.format_input()
 
     def format_input(self, value=0):
+        """Formats the display for the calculator"""
         index = 0
         expression = list(self.expression)
         if value:
@@ -72,11 +77,13 @@ class CalculatorLogic:
         return ''.join(expression)
 
     def format_output(self, value):
+        """Formats the output of the computation"""
         if isinstance(value, int):
             return f'{value:.0f}'
         return f"{value:.8g}"
 
     def get_history(self, expression: str):
+        """Gets the selected history item and add it to the display"""
         equation = expression.partition("=")
         if equation[1] == "=":
             self.expression = equation[0]
@@ -84,10 +91,12 @@ class CalculatorLogic:
         return self.format_input()
 
     def display_history(self):
+        """Formats the display for the calculator"""
         equations = [self.format_input(x) for x in self.history]
         return equations
 
     def update_operations(self):
+        """Updates the calculator on the list of all possible MathOperators"""
         return MathOperators.return_values()
 
 
@@ -105,6 +114,7 @@ class MathOperators(enum.Enum):
 
     @classmethod
     def return_values(cls):
+        """Returns a list of all values in the math operators"""
         return [x.value for x in list(MathOperators)]
 
 

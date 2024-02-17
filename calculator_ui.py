@@ -1,3 +1,4 @@
+"""UI for the calculator"""
 import tkinter as tk
 from tkinter import font, ttk
 
@@ -16,6 +17,7 @@ class CalculatorUI(tk.Tk):
         self.operands = self.special_box
 
     def init_components(self):
+        """Initialize the components"""
         buttons = self.init_buttons()
         operators = self.init_operators()
         display = self.init_display()
@@ -29,6 +31,7 @@ class CalculatorUI(tk.Tk):
         operators.pack(side=tk.RIGHT, **settings)
 
     def init_special_operands(self):
+        """Initialize the operations"""
         settings = {"padx": 2, "pady": 2, "expand": True, "fill": "both"}
         frame = tk.Frame(self)
         keys = ["(", ")"]
@@ -41,6 +44,7 @@ class CalculatorUI(tk.Tk):
         return frame
 
     def init_history(self):
+        """Initialize the history listbox"""
         settings = {"padx": 2, "pady": 2, "expand": True, "fill": "both"}
         frame = tk.Frame(self)
         list_history = tk.Listbox(frame, width= 30, height= 5,
@@ -50,6 +54,7 @@ class CalculatorUI(tk.Tk):
         scrollbar.configure(command=list_history.yview)
         self.history_info.set(["Past calculations will appear here"])
         list_history.pack(side=tk.LEFT, **settings)
+        settings = {"padx": 2, "pady": 2}
         scrollbar.pack(side=tk.LEFT, **settings)
         return frame
 
