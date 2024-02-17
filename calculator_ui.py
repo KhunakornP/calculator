@@ -17,11 +17,17 @@ class CalculatorUI(tk.Tk):
         buttons = self.init_buttons()
         operators = self.init_operators()
         display = self.init_display()
+        top_row = self.init_special_operands()
         settings = {"padx": 5, "pady": 2, "expand": True, "fill": "both"}
         display.pack(anchor=tk.N, **settings)
+        top_row.pack(side= tk.TOP, **settings)
         buttons.pack(side=tk.LEFT, **settings)
         operators.pack(side=tk.RIGHT, **settings)
 
+    def init_special_operands(self):
+        keys = ["(", ")"]
+        buttons = Keypad(self, keys, 6)
+        return buttons
     def init_buttons(self):
         """Initializes the num-pad"""
         keys = [7, 8, 9, 4, 5, 6, 1, 2, 3, "del", 0, "."]
@@ -30,8 +36,8 @@ class CalculatorUI(tk.Tk):
 
     def init_operators(self):
         """Initialize the operator keypad"""
-        keys = list("*/+-^=")
-        operators = Keypad(self, keys, 1)
+        keys = ["*", "/", "+", "-", "^", "sqrt", "log", "exp", "clr","="]
+        operators = Keypad(self, keys, 2)
         return operators
 
     def init_display(self):

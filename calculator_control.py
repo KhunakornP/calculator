@@ -15,7 +15,9 @@ class Controller:
         mainframe.children["!keypad"].bind('<Button>', self.add_to_display)
         mainframe.children["!keypad2"].bind('<Button>', self.add_to_display)
         mainframe.children["!keypad"].bind_button('<Button>', self.delete_input, 10)
-        mainframe.children["!keypad2"].bind_button('<Button>',self.calculate, 6)
+        mainframe.children["!keypad2"].bind_button('<Button>', self.clear_input,9)
+        mainframe.children["!keypad2"].bind_button('<Button>',self.calculate, 10)
+        mainframe.children["!keypad3"].bind('<Button>', self.add_to_display)
     def add_to_display(self, event):
         """
         Adds the input to the calculators display.
@@ -42,7 +44,7 @@ class Controller:
         """
         self.main.text.set(self.logic.delete_display())
 
-    def clear_input(self):
+    def clear_input(self, event):
         """Clear the user input in the display"""
         self.main.text.set(self.logic.clear_display())
 

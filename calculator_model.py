@@ -8,11 +8,15 @@ class CalculatorLogic:
 
     def calculate(self):
         expression = self.format_input()
+        if expression == "":
+            return ""
         expression = expression.replace("^", "**")
         try:
             total = eval(expression)
         except:
             return None
+        if isinstance(total, object):
+            total = ""
         self.expression = str(total)
         return total
 
