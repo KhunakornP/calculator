@@ -1,4 +1,6 @@
 """Controller for the calculator"""
+
+
 from calculator_ui import CalculatorUI
 from calculator_model import CalculatorLogic
 import abc
@@ -11,29 +13,42 @@ class Controller:
         mainframe = CalculatorUI()
         self.main = mainframe
         self.logic = CalculatorLogic()
-        self.display_text = mainframe.text
-        mainframe.children["!keypad"].bind('<Button>', self.add_to_display)
-        mainframe.children["!keypad2"].bind('<Button>', self.add_to_display)
-        mainframe.children["!keypad"].bind_button('<Button>', self.delete_input, 10)
-        mainframe.children["!keypad2"].bind_button('<Button>', self.clear_input,9)
-        mainframe.children["!keypad2"].bind_button('<Button>',self.calculate, 10)
-        mainframe.children["!keypad3"].bind('<Button>', self.add_to_display)
-    def add_to_display(self, event):
+        self.display_text = self.main.text
+        self.main.operands["values"] = self.logic.update_operations()
+        self.main.children["!keypad"].bind('<Button>', self.add_to_display)
+        self.main.children["!keypad2"].bind('<Button>', self.add_to_display)
+        self.main.children["!keypad"].bind_button('<Button>', self.delete_input, 10)
+        self.main.children["!keypad2"].bind_button('<Button>', self.clear_input,7)
+        self.main.children["!keypad2"].bind_button('<Button>',self.calculate, 8)
+        self.main.children["!frame2"].children["!combobox"].bind('<<ComboboxSelected>>',lambda event:self.add_to_display(event, 1))
+        self.main.children["!frame2"].children["!keypad"].bind('<Button>',self.add_to_display)
+        self.main.children["!frame3"].children["!listbox"].bind('<<ListboxSelect>>',lambda event: self.add_to_display(event,2))
+
+    def add_to_display(self, event, type=3):
         """
         Adds the input to the calculators display.
         """
-        pressed_button = event.widget["text"]
-        self.main.text.set(self.logic.add_to_display(pressed_button))
+        if type == 1:
+            self.main.text.set(self.logic.add_to_display(
+                                self.main.special.get()))
+        elif type == 2:
+            if event.widget.curselection() != ():
+                selection = event.widget.curselection()
+                self.main.text.set(self.logic.get_history(event.widget.get(selection)))
+        elif type == 3:
+            pressed_button = event.widget["text"]
+            self.main.text.set(self.logic.add_to_display(pressed_button))
 
     def calculate(self, event):
         """
         Calculate the given characters on display using the model.
         """
         self.main.text.set(self.logic.calculate())
+        self.get_history()
 
     def get_history(self):
         """Gets the history from the model and add it to the display"""
-        pass
+        self.main.history_info.set(self.logic.display_history())
 
     def delete_input(self, event):
         """
@@ -47,23 +62,6 @@ class Controller:
     def clear_input(self, event):
         """Clear the user input in the display"""
         self.main.text.set(self.logic.clear_display())
-
-
-class CalculatorState(abc.ABC):
-    @abc.abstractmethod
-    def delete_input(self):
-        """Deletes the input"""
-        raise NotImplementedError
-
-
-class ActiveCalculator(CalculatorState):
-    def delete_input(self):
-        pass
-
-
-class InactiveCalculator(CalculatorState):
-    def delete_input(self):
-        pass
 
 
 if __name__ == "__main__":

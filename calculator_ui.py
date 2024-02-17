@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import font
+from tkinter import font, ttk
 
 
 class CalculatorUI(tk.Tk):
@@ -8,26 +8,51 @@ class CalculatorUI(tk.Tk):
         super().__init__()
         self.title("Calculator")
         self.text = tk.StringVar()
-        self.init_components()
+        self.special = tk.StringVar()
+        self.history_info = tk.StringVar()
         self.default_font = font.nametofont("TkDefaultFont")
         self.default_font.configure(family="Times", size=12)
-
+        self.init_components()
+        self.operands = self.special_box
 
     def init_components(self):
         buttons = self.init_buttons()
         operators = self.init_operators()
         display = self.init_display()
         top_row = self.init_special_operands()
+        self.history = self.init_history()
         settings = {"padx": 5, "pady": 2, "expand": True, "fill": "both"}
+        self.history.pack(anchor= tk.N, **settings)
         display.pack(anchor=tk.N, **settings)
         top_row.pack(side= tk.TOP, **settings)
         buttons.pack(side=tk.LEFT, **settings)
         operators.pack(side=tk.RIGHT, **settings)
 
     def init_special_operands(self):
+        settings = {"padx": 2, "pady": 2, "expand": True, "fill": "both"}
+        frame = tk.Frame(self)
         keys = ["(", ")"]
-        buttons = Keypad(self, keys, 6)
-        return buttons
+        buttons = Keypad(frame, keys, 6)
+        self.special_box = ttk.Combobox(frame,font=self.default_font,
+                                   textvariable=self.special)
+        self.special_box["values"] = []
+        buttons.pack(side=tk.LEFT, **settings)
+        self.special_box.pack(side=tk.RIGHT, **settings)
+        return frame
+
+    def init_history(self):
+        settings = {"padx": 2, "pady": 2, "expand": True, "fill": "both"}
+        frame = tk.Frame(self)
+        list_history = tk.Listbox(frame, width= 30, height= 5,
+                                  selectmode="browse",
+                                  listvariable=self.history_info)
+        scrollbar = tk.Scrollbar(frame, orient="vertical")
+        scrollbar.configure(command=list_history.yview)
+        self.history_info.set(["Past calculations will appear here"])
+        list_history.pack(side=tk.LEFT, **settings)
+        scrollbar.pack(side=tk.LEFT, **settings)
+        return frame
+
     def init_buttons(self):
         """Initializes the num-pad"""
         keys = [7, 8, 9, 4, 5, 6, 1, 2, 3, "del", 0, "."]
@@ -36,7 +61,7 @@ class CalculatorUI(tk.Tk):
 
     def init_operators(self):
         """Initialize the operator keypad"""
-        keys = ["*", "/", "+", "-", "^", "sqrt", "log", "exp", "clr","="]
+        keys = ["*", "/", "+", "-", "^", "mod","clr","="]
         operators = Keypad(self, keys, 2)
         return operators
 
