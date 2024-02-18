@@ -7,21 +7,29 @@ from calculator_model import CalculatorLogic
 
 class Controller:
     """"""
-    def __init__(self):
+    def __init__(self, ui):
         self.state = None
-        mainframe = CalculatorUI()
-        self.main = mainframe
+        self.main = ui
         self.logic = CalculatorLogic()
         self.display_text = self.main.text
         self.main.operands["values"] = self.logic.update_operations()
-        self.main.children["!keypad"].bind('<Button>', self.add_to_display)
-        self.main.children["!keypad2"].bind('<Button>', self.add_to_display)
-        self.main.children["!keypad"].bind_button('<Button>', self.delete_input, 10)
-        self.main.children["!keypad2"].bind_button('<Button>', self.clear_input,7)
-        self.main.children["!keypad2"].bind_button('<Button>',self.calculate, 8)
-        self.main.children["!frame2"].children["!combobox"].bind('<<ComboboxSelected>>',lambda event:self.add_to_display(event, 1))
-        self.main.children["!frame2"].children["!keypad"].bind('<Button>',self.add_to_display)
-        self.main.children["!frame3"].children["!listbox"].bind('<<ListboxSelect>>',lambda event: self.add_to_display(event,2))
+        self.bind_components()
+
+    def bind_components(self):
+        keypad1 = self.main.children["!keypad"]
+        keypad2 = self.main.children["!keypad2"]
+        frame2 = self.main.children["!frame2"]
+        keypad1.bind('<Button>', self.add_to_display)
+        keypad2.bind('<Button>', self.add_to_display)
+        keypad1.bind_button('<Button>', self.delete_input, 10)
+        keypad2.bind_button('<Button>', self.clear_input, 7)
+        keypad2.bind_button('<Button>', self.calculate, 8)
+        frame2.children["!combobox"].bind('<<ComboboxSelected>>',
+                                          lambda event: self.add_to_display(
+                                              event, 1))
+        frame2.children["!keypad"].bind('<Button>', self.add_to_display)
+        self.main.children["!frame3"].children["!listbox"].bind(
+            '<<ListboxSelect>>', lambda event: self.add_to_display(event, 2))
 
     def add_to_display(self, event, event_type=3):
         """
@@ -42,8 +50,14 @@ class Controller:
         """
         Calculate the given characters on display using the model.
         """
-        self.main.text.set(self.logic.calculate())
-        self.get_history()
+        calculation = self.logic.calculate()
+        self.main.clear_notification()
+        if calculation[0] is None:
+            self.main.notify_invalid_input()
+        else:
+            self.main.text.set(calculation[0])
+        if calculation[1]:
+            self.get_history()
 
     def get_history(self):
         """Gets the history from the model and add it to the display"""
@@ -61,8 +75,10 @@ class Controller:
     def clear_input(self, event):
         """Clear the user input in the display"""
         self.main.text.set(self.logic.clear_display())
+        self.main.clear_notification()
+
 
 
 if __name__ == "__main__":
-    remote = Controller()
+    remote = Controller(CalculatorUI())
     remote.main.run()
