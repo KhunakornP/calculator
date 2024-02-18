@@ -20,12 +20,12 @@ class CalculatorUI(tk.Tk):
         """Initialize the components"""
         buttons = self.init_buttons()
         operators = self.init_operators()
-        display = self.init_display()
+        self.display = self.init_display()
         top_row = self.init_special_operands()
         self.history = self.init_history()
         settings = {"padx": 5, "pady": 2, "expand": True, "fill": "both"}
         self.history.pack(anchor= tk.N, **settings)
-        display.pack(anchor=tk.N, **settings)
+        self.display.pack(anchor=tk.N, **settings)
         top_row.pack(side= tk.TOP, **settings)
         buttons.pack(side=tk.LEFT, **settings)
         operators.pack(side=tk.RIGHT, **settings)
@@ -54,7 +54,7 @@ class CalculatorUI(tk.Tk):
         scrollbar.configure(command=list_history.yview)
         self.history_info.set(["Past calculations will appear here"])
         list_history.pack(side=tk.LEFT, **settings)
-        settings = {"padx": 2, "pady": 2}
+        settings = {"padx": 2, "pady": 2, "expand": True, "fill": "y"}
         scrollbar.pack(side=tk.LEFT, **settings)
         return frame
 
@@ -79,6 +79,12 @@ class CalculatorUI(tk.Tk):
         settings = {"expand": True, "fill": "both"}
         display.pack(**settings)
         return frame
+
+    def notify_invalid_input(self):
+        self.display.children["!label"]["fg"] = "#F00000"
+
+    def clear_notification(self):
+        self.display.children["!label"]["fg"] = "#FDDA0D"
 
     def run(self):
         """Runs the UI"""
