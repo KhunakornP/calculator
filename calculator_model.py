@@ -10,6 +10,7 @@ class CalculatorLogic:
 
     def calculate(self):
         """Calculates the expression"""
+        update = False
         expression = self.format_input()
         expression = expression.replace("^", "**")
         expression = expression.replace("mod", "%")
@@ -18,13 +19,15 @@ class CalculatorLogic:
         try:
             total = eval(expression)
         except:
-            return None
+            return None, False
         if not isinstance(total, (int, float)):
             total = ""
         if total != "":
-            self.history.append(f'{self.expression} = {self.format_output(total)}')
+            self.history.append(f'{self.expression} ='
+                                f' {self.format_output(total)}')
+            update = True
         self.expression = self.format_output(total)
-        return self.format_output(total)
+        return self.format_output(total), update
 
     def add_to_display(self, item):
         """Adds the item to the display"""
@@ -79,7 +82,7 @@ class CalculatorLogic:
     def format_output(self, value):
         """Formats the output of the computation"""
         if isinstance(value, int):
-            return f'{value:.0f}'
+            return f'{value:.12g}'
         return f"{value:.8g}"
 
     def get_history(self, expression: str):
