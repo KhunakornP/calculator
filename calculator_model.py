@@ -14,8 +14,11 @@ class CalculatorLogic:
         expression = self.format_input()
         expression = expression.replace("^", "**")
         expression = expression.replace("mod", "%")
+        expression = expression.replace("log", "log10")
+        expression = expression.replace("ln", "log")
+        expression = expression.replace("log102", "log2")
         if expression == "":
-            return ""
+            return "", False
         try:
             total = eval(expression)
         except:
@@ -49,7 +52,7 @@ class CalculatorLogic:
         else:
             if item in operators:
                 if (len(self.expression) > 0 and
-                        self.expression[-1] in operators):
+                        self.expression[-1] in ["d"] + operators):
                     self.expression += str(item)
                 else:
                     self.expression = str(item) + self.expression + ")"
@@ -68,7 +71,12 @@ class CalculatorLogic:
         return self.format_input()
 
     def format_input(self, value=0):
-        """Formats the display for the calculator"""
+        """
+        Formats the display for the calculator
+
+        :param value: a string to format instead of th expression
+        :return: a formatted string
+        """
         index = 0
         expression = list(self.expression)
         if value:
@@ -86,10 +94,18 @@ class CalculatorLogic:
         return f"{value:.8g}"
 
     def get_history(self, expression: str):
-        """Gets the selected history item and add it to the display"""
+        """Gets the selected history equation and add it to the display"""
         equation = expression.partition("=")
         if equation[1] == "=":
-            self.expression = equation[0]
+            self.expression = equation[0].rstrip(" ")
+            return self.expression
+        return self.format_input()
+
+    def get_history_result(self, expression):
+        """Gets the result from the history and adds it to the display"""
+        equation = expression.partition("=")
+        if equation[1] == "=":
+            self.expression = equation[2]
             return self.expression
         return self.format_input()
 
@@ -105,10 +121,14 @@ class CalculatorLogic:
 
 class MathOperators(enum.Enum):
     """Class to represent math operators"""
-    S = "sqrt"
+    Q = "sqrt"
     L = "log"
-    T = "log2"
+    W = "log2"
+    N = "ln"
     E = "exp"
+    S = "sin"
+    C = "cos"
+    T = "tan"
 
     @classmethod
     def return_operands(cls):
