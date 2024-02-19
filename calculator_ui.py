@@ -45,17 +45,20 @@ class CalculatorUI(tk.Tk):
 
     def init_history(self):
         """Initialize the history listbox"""
-        settings = {"padx": 2, "pady": 2, "expand": True, "fill": "both"}
+        settings = {"padx": 2, "pady": 2}
         frame = tk.Frame(self)
         list_history = tk.Listbox(frame, width= 30, height= 5,
                                   selectmode="browse",
                                   listvariable=self.history_info)
+        label = tk.Label(frame, text="For equation left-click for"
+                                     " result right-click!")
         scrollbar = tk.Scrollbar(frame, orient="vertical")
         scrollbar.configure(command=list_history.yview)
         self.history_info.set(["Past calculations will appear here"])
-        list_history.pack(side=tk.LEFT, **settings)
-        settings = {"padx": 2, "pady": 2, "expand": True, "fill": "y"}
-        scrollbar.pack(side=tk.LEFT, **settings)
+        label.pack(anchor=tk.NW, **settings)
+        list_history.pack(side=tk.LEFT, **settings, expand=True, fill="both")
+        settings = {"padx": 2, "pady": 2}
+        scrollbar.pack(anchor=tk.W, **settings, expand=True, fill="y")
         return frame
 
     def init_buttons(self):
@@ -81,9 +84,14 @@ class CalculatorUI(tk.Tk):
         return frame
 
     def notify_invalid_input(self):
+        """
+        Changes the display to red and plays the default os notification sound
+        """
         self.display.children["!label"]["fg"] = "#F00000"
+        self.bell()
 
     def clear_notification(self):
+        """Reverts the display to its original color"""
         self.display.children["!label"]["fg"] = "#FDDA0D"
 
     def run(self):
