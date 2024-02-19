@@ -181,17 +181,3 @@ class Keypad(tk.Frame):
             if button == f"!button{index}":
                 self.children[button].bind(sequence, function, add)
                 return
-
-
-# test cases to be removed
-if __name__ == "__main__":
-    root = tk.Tk()
-    def hahahhaha(*args):
-        print("hahahhahahah")
-    keypad = Keypad(root, list('789456123'), 3)
-    keypad.set_button(1, "fg", "red")
-    keypad.bind_button('<Button>', hahahhaha, 1)
-    keypad.pack()
-    root.mainloop()
-    UI = CalculatorUI()
-    UI.run()

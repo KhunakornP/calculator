@@ -1,7 +1,4 @@
 """Controller for the calculator"""
-
-
-from calculator_ui import CalculatorUI
 from calculator_model import CalculatorLogic
 
 
@@ -82,9 +79,3 @@ class Controller:
         """Clear the user input in the display"""
         self.main.text.set(self.logic.clear_display())
         self.main.clear_notification()
-
-
-
-if __name__ == "__main__":
-    remote = Controller(CalculatorUI())
-    remote.main.run()

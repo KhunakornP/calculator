@@ -139,16 +139,3 @@ class MathOperators(enum.Enum):
     def return_values(cls):
         """Returns a list of all values in the math operators"""
         return [x.value for x in list(MathOperators)]
-
-
-if __name__ == "__main__":
-    cal = CalculatorLogic()
-    cal.add_to_display("4")
-    cal.add_to_display("^4")
-    print(cal.calculate())
-    cal.clear_display()
-    cal.add_to_display("4+5")
-    print(cal.calculate())
-    cal.clear_display()
-    print(cal.calculate())
-    print(cal.history)
