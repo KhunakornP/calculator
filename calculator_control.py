@@ -16,6 +16,7 @@ class Controller:
         self.bind_components()
 
     def bind_components(self):
+        """Binds the components in the ui to their respective handlers"""
         keypad1 = self.main.children["!keypad"]
         keypad2 = self.main.children["!keypad2"]
         frame2 = self.main.children["!frame2"]
@@ -29,11 +30,13 @@ class Controller:
                                               event, 1))
         frame2.children["!keypad"].bind('<Button>', self.add_to_display)
         self.main.children["!frame3"].children["!listbox"].bind(
-            '<<ListboxSelect>>', lambda event: self.add_to_display(event, 2))
+            '<Button-1>', lambda event: self.add_to_display(event, 2))
+        self.main.children["!frame3"].children["!listbox"].bind(
+            '<Button-3>', lambda event: self.add_to_display(event, 4))
 
     def add_to_display(self, event, event_type=3):
         """
-        Adds the input to the calculators display.
+        Adds the input to the calculators display depending on the event_type.
         """
         if event_type == 1:
             self.main.text.set(self.logic.add_to_display(
@@ -41,10 +44,16 @@ class Controller:
         elif event_type == 2:
             if event.widget.curselection() != ():
                 selection = event.widget.curselection()
-                self.main.text.set(self.logic.get_history(event.widget.get(selection)))
+                self.main.text.set(self.logic.get_history(
+                    event.widget.get(selection)))
         elif event_type == 3:
             pressed_button = event.widget["text"]
             self.main.text.set(self.logic.add_to_display(pressed_button))
+        elif event_type == 4:
+            if event.widget.curselection() != ():
+                selection = event.widget.curselection()
+                self.main.text.set(self.logic.get_history_result(
+                    event.widget.get(selection)))
 
     def calculate(self, event):
         """
@@ -65,10 +74,7 @@ class Controller:
 
     def delete_input(self, event):
         """
-        While the controller is in the active state delete the last,
-        character in the display.
-        While the controller is in the inactive state delete the entire,
-        expression on display.
+        Deletes the last character in the display.
         """
         self.main.text.set(self.logic.delete_display())
 
