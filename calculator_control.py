@@ -1,12 +1,11 @@
 """Controller for the calculator"""
-from calculator_model import CalculatorLogic
 
 
 class Controller:
     """"""
-    def __init__(self, ui):
+    def __init__(self, ui, logic):
         self.main = ui
-        self.logic = CalculatorLogic()
+        self.logic = logic
         self.display_text = self.main.text
         self.main.operands["values"] = self.logic.update_operations()
         self.bind_components()
