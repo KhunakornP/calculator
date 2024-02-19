@@ -7,7 +7,7 @@ class Controller:
         self.main = ui
         self.logic = logic
         self.display_text = self.main.text
-        self.main.operands["values"] = self.logic.update_operations()
+        self.main.special_box["values"] = self.logic.update_operations()
         self.bind_components()
 
     def bind_components(self):

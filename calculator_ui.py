@@ -14,7 +14,6 @@ class CalculatorUI(tk.Tk):
         self.default_font = font.nametofont("TkDefaultFont")
         self.default_font.configure(family="Times", size=12)
         self.init_components()
-        self.operands = self.special_box
 
     def init_components(self):
         """Initialize the components"""
