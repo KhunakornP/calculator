@@ -5,7 +5,6 @@ from calculator_model import CalculatorLogic
 class Controller:
     """"""
     def __init__(self, ui):
-        self.state = None
         self.main = ui
         self.logic = CalculatorLogic()
         self.display_text = self.main.text
