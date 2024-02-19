@@ -64,12 +64,15 @@ class CalculatorUI(tk.Tk):
         """Initializes the num-pad"""
         keys = [7, 8, 9, 4, 5, 6, 1, 2, 3, "del", 0, "."]
         buttons = Keypad(self, keys, 3)
+        buttons.set_button(10, "bg", "#F28C28")
         return buttons
 
     def init_operators(self):
         """Initialize the operator keypad"""
         keys = ["*", "/", "+", "-", "^", "mod","clr","="]
         operators = Keypad(self, keys, 2)
+        operators.set_button(7, "bg", "#C70039")
+        operators.set_button(8, "bg", "#6495ED")
         return operators
 
     def init_display(self):
